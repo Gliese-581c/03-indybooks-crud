@@ -24,7 +24,8 @@ namespace IndyBooks.Controllers;
         public IActionResult RemoveBook(long id)
         {
             //TODO: Remove the Book associated with the given id number; Save Changes
-
+            _db.Books.Remove(_db.Books.Find(id));
+            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -37,9 +38,16 @@ namespace IndyBooks.Controllers;
             IEnumerable<Book> books;
            
             //TODO: diplay a single book with the given id if its greater than zero
+            if (id > 0)
+            {
+                books = _db.Books.Where(b => b.Id == id);
+            }
 
              // otherwise return the entire set of books
+            else
+            {
                books = _db.Books.OrderBy(b => b.SKU);
+            }
             
             var searchResults = new SearchResultsVM
             {

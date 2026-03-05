@@ -75,6 +75,7 @@ namespace IndyBooks.Controllers;
         [HttpPost]
         public IActionResult CreateBook(CreateBookVM createBookVM, long bookId)
         {
+            int x = 0;
             //TODO: Build the Writer object for the given Book, using the view Model info.
             // HINT: you will need to do it differently based on what the user entered
             //    - the VM contains an AuthorId, then get the Author object from the DbContext
@@ -97,8 +98,9 @@ namespace IndyBooks.Controllers;
             if (bookId == 0)
             {
                 bookId = _db.Books.Max(b => b.Id) + 1;
+                x = 1;
             }
-
+            
             Book book = new Book
             {
                 Title = createBookVM.Title,
@@ -109,7 +111,10 @@ namespace IndyBooks.Controllers;
             };
 
             //TODO: Add the new book to the DbContext (or just skip to SaveChanges for an existing book update)
+            if (x == 1) 
+            {
             _db.Books.Add(book);
+            }
             
             _db.SaveChanges();
 
@@ -123,13 +128,19 @@ namespace IndyBooks.Controllers;
          */
          
          [HttpGet]
-         public IActionResult UpdateBook(long bookId)
+         public IActionResult UpdateBook(long id)
         {
             //TODO: Write a method to load book info into the ViewModel for the CreateBook View
-            Book book = null;
+            Book book = _db.Books.Single(b => b.Id == id);
             var bookVM = new CreateBookVM
             {
-
+                Authors = _db.Writers,
+                AuthorId = book.Author.Id,
+                AuthorName = book.Author.Name,
+                BookId = id,
+                Title = book.Title,
+                SKU = book.SKU,
+                Price = book.Price
             };
             return View("CreateBook", bookVM);
             

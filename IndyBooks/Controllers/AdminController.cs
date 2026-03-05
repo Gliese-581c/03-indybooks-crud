@@ -81,9 +81,24 @@ namespace IndyBooks.Controllers;
             //    - the VM contains an AuthorName, then create a new Author object and Add it to the DbContext
             Writer writer = null;
 
+            writer =_db.Writers.SingleOrDefault(a => a.Id == createBookVM.AuthorId);
+
+            if (writer == null)
+            {
+                writer = new Writer
+                {
+                    Name = createBookVM.AuthorName
+                };
+                _db.Writers.Add(writer);
+            }
 
             //Builds the Book using the parameter data and your newly created author.
             //TODO: AFTER COMPLETING the UpdateBook method,adjust this code to make sure to only create a new book when the needed
+            if (bookId == 0)
+            {
+                bookId = _db.Books.Max(b => b.Id) + 1;
+            }
+
             Book book = new Book
             {
                 Title = createBookVM.Title,
@@ -94,9 +109,8 @@ namespace IndyBooks.Controllers;
             };
 
             //TODO: Add the new book to the DbContext (or just skip to SaveChanges for an existing book update)
+            _db.Books.Add(book);
             
-            
-
             _db.SaveChanges();
 
             //Shows the new book by passing the Book's id to the Index Action 

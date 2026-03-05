@@ -5,7 +5,7 @@
     ViewBag.Title = "Create Book";
     //TODO: Make the Author's select list easier to use by sorting it
     var AuthorListItems = Model.Authors;
-
+    AuthorListItems = AuthorListItems.OrderBy(a => a.Name);
 }
 <h3>Add New Book</h3>
 <form asp-action="CreateBook" asp-controller="Admin" asp-route-id="@Model.BookId">

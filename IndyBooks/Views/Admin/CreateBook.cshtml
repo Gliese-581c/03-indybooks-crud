@@ -1,0 +1,37 @@
+﻿@model IndyBooks.ViewModels.CreateBookVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Create Book";
+    //TODO: Make the Author's select list easier to use by sorting it
+    var AuthorListItems = Model.Authors;
+
+}
+<h3>Add New Book</h3>
+<form asp-action="CreateBook" asp-controller="Admin" asp-route-id="@Model.BookId">
+    <div>
+        <label asp-for="@Model.Title"></label>
+        <input asp-for="@Model.Title" />
+    </div>
+    <div>
+        <label asp-for="@Model.AuthorName"></label>
+        <select asp-for="AuthorId"
+                asp-items="@(new SelectList(AuthorListItems,"Id","Name"))">
+            <option>Please select one</option>
+        </select>
+        OR enter new <label asp-for="@Model.AuthorName"></label>
+        <input asp-for="@Model.AuthorName" />
+
+    </div>
+     <div>
+        <label asp-for="@Model.SKU"></label>
+        <input asp-for="@Model.SKU" />
+        <span asp-validation-for="@Model.SKU"></span>
+    </div>
+    <div>
+        <label asp-for="@Model.Price"></label>
+        <input asp-for="@Model.Price" />
+        <span asp-validation-for="@Model.Price"></span>
+    </div>
+    <input type="submit" value="Submit" />
+</form>
